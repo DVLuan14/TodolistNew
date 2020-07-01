@@ -23,10 +23,12 @@
   }
   .navsi {
     margin: auto;
-    height: 400px;
+    height: 375px;
     background: white;
     position: absolute;
-    padding: 0 15px;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px 5px #90b1ff94;
     .email{
       margin: 15px 0;
     }
@@ -67,6 +69,12 @@
         background: rgb(221, 231, 241);
       }
     }
+  }
+}
+.el-form-item{
+  .btn-signin{
+    width: 100%;
+    border-radius: 20px;
   }
 }
 

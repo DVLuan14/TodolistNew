@@ -12,6 +12,7 @@
     </div>
     <el-table
       :data="listTodos"
+      v-loading="callingAPI"
       style="width: 100%">
       <el-table-column label="Tên công việc">
         <template slot-scope="scope">
@@ -41,7 +42,9 @@
               </div>
             </el-form>
             <router-link to>
-              <span @click="openSmallTodos(scope.row)">{{ scope.row.title }}</span>
+              <span
+                class="title-todo"
+                @click="openSmallTodos(scope.row)">{{ scope.row.title }}</span>
             </router-link>
           </el-row>
         </template>
@@ -62,7 +65,6 @@
       class="pagination"
       background
       layout="prev, pager, next"
-      :page-size="5"
       :page-count="totalPage"
       @current-change="changePage"
       :current-page="currentPage">
@@ -92,6 +94,7 @@ import axios from 'axios';
 import userServices from '@/lib/userServices';
 import ConfirmDeletePopup from '@/components/ConfirmDelete.vue';
 import EditTodos from '@/components/EditTodos.vue';
+import todosServices from '@/services/todos';
 import smallTodos from './SmallToDos.vue';
 
 export default {
@@ -107,7 +110,6 @@ export default {
   },
   data() {
     const validateTitle = (rule, value, callback) => {
-      console.log('validateTitle', value, rule);
       if (value === '') {
         callback(new Error('Tiêu đề không được để trống.'));
       } else {
@@ -115,6 +117,7 @@ export default {
       }
     };
     return {
+      callingAPI: false,
       todos: [],
       listTodos: [],
       form: {
@@ -139,25 +142,20 @@ export default {
       loading: false,
     };
   },
-  created() {
-    this.getListTodo(this.currentPage, 10);
-  },
-  mounted() {
+  beforeMount() {
     this.getListTodo();
   },
   methods: {
     getListTodo() {
-      axios({
-        method: 'get',
-        url: `https://mockup-api.herokuapp.com/api/v1/todos?page=${this.currentPage}&limit=10`,
-        headers: {
-          Authorization: userServices.userData().auth_token,
-          'Content-Type': 'application/json',
-        },
-      }).then((response) => {
-        this.listTodos = response.data;
+      this.callingAPI = true;
+      todosServices.getAll({ page: this.currentPage, limit: 5 }).then((response) => {
+        this.listTodos = response.data.map((todo) => ({
+          ...todo,
+          isCreating: false,
+          isEditing: false,
+        }));
         this.totalPage = parseInt(response.headers['x-total-pages'], 0);
-        console.log(this.listTodos);
+        this.callingAPI = false;
       });
     },
 
@@ -247,7 +245,11 @@ export default {
     },
 
     changePage(val) {
+      this.loading = true;
       this.currentPage = val;
+      setTimeout(() => {
+        this.loading = false;
+      }, 1000);
       this.getListTodo();
     },
 
@@ -281,5 +283,8 @@ export default {
 }
 .el-icon-close{
   color: red;
+}
+.title-todo:hover{
+  font-size: 18px;
 }
 </style>

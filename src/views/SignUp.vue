@@ -1,39 +1,44 @@
 <template>
-  <el-form>
+  <el-form class="container">
     <div class="sign-up">
-        <div class="tittle"><h1>ĐĂNG KÝ</h1></div>
       <div class="screen">
-        <div class="nav">
+      <div class="tittle"><h1>ĐĂNG KÝ TÀI KHOẢN</h1></div>
+        <el-form class="nav">
           <div class="email">
             <span class="email">Email</span>
-            <el-input v-model="email" type="text"/>
+            <el-input placeholder="Email" v-model="email" type="text"/>
           </div>
           <div class="password">
             <span class="password">Mật khẩu</span>
-            <el-input v-model="password" type="password" />
+            <el-input placeholder="Password" v-model="password" type="password" />
           </div>
           <div class="password">
             <span class="password">Nhập lại mật khẩu</span>
-            <el-input v-model="rePassword" type="password"/>
+            <el-input placeholder="Re-Password" v-model="rePassword" type="password"/>
           </div>
           <hr>
           <el-form-item>
-            <el-button type="primary" style="width: 100%" @click="signup">Đăng ký</el-button>
+            <el-button
+              class="btn-signup"
+              type="primary"
+              style="width: 100%"
+              @click="signup()"
+              v-loading="loading">Đăng ký</el-button>
           </el-form-item>
           <el-form-item class="signup">
             <p>Đã có tài khoản? </p>
             <router-link to="/login">
               <p>Đăng nhập</p>
-              </router-link>
+            </router-link>
           </el-form-item>
-          <div class="footer"><p>Coppyright @2020</p></div>
-        </div>
+        </el-form>
       </div>
     </div>
   </el-form>
 </template>
 <script>
-import axios from 'axios';
+import authServices from '@/services/auth';
+import userServices from '@/lib/userServices';
 
 export default {
   name: 'SignUp',
@@ -44,16 +49,21 @@ export default {
       email: '',
       password: '',
       rePassword: '',
+      loading: false,
     };
   },
   methods: {
     signup() {
-      axios.post(`https://mockup-api.herokuapp.com/auth/signup?email=${this.email}&password=${this.password}&password_confirmation=${this.rePassword}`, {
-        Headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then(() => {
+      this.loading = true;
+      authServices.register({
+        email: this.email,
+        password: this.password,
+        password_confirmation: this.rePassword,
+      }).then((response) => {
+        userServices.updateUserData(response.data);
         this.$router.push('/login');
+      }).catch(() => {
+        this.loading = false;
       });
     },
   },
@@ -66,6 +76,9 @@ export default {
     justify-content: center;
     a{
       margin: 0 5px;
+    }
+    .tittle{
+      margin-bottom: 50px;
     }
   }
 </style>

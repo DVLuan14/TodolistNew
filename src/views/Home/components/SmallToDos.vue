@@ -20,7 +20,7 @@
           <el-checkbox
             type="radio"
             v-model="item.done"
-            @change="checkedItems(item)">{{ item.content }}</el-checkbox>
+            @change.native="checkedItems(item, $event)">{{ item.content }}</el-checkbox>
         </el-form>
       </div>
     </div>
@@ -66,6 +66,8 @@ export default {
     },
 
     checkedItems(item) {
+      // console.log(e.target.checked);
+
       this.loading = true;
       axios({
         method: 'put',

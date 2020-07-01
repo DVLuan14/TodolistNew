@@ -76,6 +76,7 @@
 <script>
 import axios from 'axios';
 import userServices from '@/lib/userServices';
+import todosServices from '@/services/todos';
 
 export default {
   name: 'EditTodos',
@@ -102,15 +103,12 @@ export default {
     getListItems() {
       this.form.title = this.data.title;
       this.loading = true;
-      axios({
-        method: 'get',
-        url: `https://mockup-api.herokuapp.com/api/v1/todos/${this.data.id}/items`,
-        headers: {
-          Authorization: userServices.userData().auth_token,
-          'Content-Type': 'application/json',
-        },
-      }).then((res) => {
-        this.listItems = res.data.map((item) => ({ ...item, isCreating: false }));
+      todosServices.getItemsTodos(this.data.id).then((response) => {
+        this.listItems = response.data.map((item) => ({
+          ...item,
+          isEditing: false,
+          isCreating: false,
+        }));
         this.loading = false;
       });
     },
@@ -212,10 +210,13 @@ export default {
       }
     },
 
-    handleEditItems(row) {
+    handleEditItems(item) {
       this.handleCancelFormItems();
-      this.selectedItem = row;
-      this.listItems = this.listItems.map((i) => ({ ...i, isCreating: i.id === row.id }));
+      this.selectedItem = item;
+      this.listItems = this.listItems.map((i) => ({
+        ...i,
+        isCreating: i.id === item.id,
+      }));
       this.$nextTick(() => {
         const input = document.getElementById('title-content-input');
         if (input) input.select();

@@ -9,17 +9,21 @@
             label="Email*"
             class="email"
             :rules="rules">
-            <el-input v-model="email" type="text"/>
+            <el-input placeholder="Email" v-model="email" type="text"/>
           </el-form-item >
           <el-form-item
             prop="password"
             label="Password"
             class="password">
-            <el-input v-model="password" type="password"/>
+            <el-input placeholder="Password" v-model="password" type="password"/>
           </el-form-item>
           <hr>
           <el-form-item v-loading="loading">
-            <el-button type="primary" style="width: 100%" @click="signIn()">Đăng nhập</el-button>
+            <el-button
+              class="btn-signin"
+              type="primary"
+              style="width: 100%"
+              @click="signIn()">Đăng nhập</el-button>
           </el-form-item>
           <el-form-item class="signup">
             <p>Chưa có tài khoản?</p>
@@ -34,7 +38,7 @@
   </el-form>
 </template>
 <script>
-import axios from 'axios';
+import authServices from '@/services/auth';
 import userServices from '@/lib/userServices';
 
 export default {
@@ -52,19 +56,13 @@ export default {
   methods: {
     signIn() {
       this.loading = true;
-      axios({
-        method: 'post',
-        url: `https://mockup-api.herokuapp.com/auth/signin?email=${this.email}&password=${this.password}`,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then((response) => {
-        userServices.updateUserData(response.data);
-        this.$router.push('/');
-      }).catch((e) => {
-        this.loading = false;
-        this.errors.push(e);
-      });
+      authServices.login({ email: this.email, password: this.password })
+        .then((response) => {
+          userServices.updateUserData(response.data);
+          this.$router.push('/');
+        }).catch(() => {
+          this.loading = false;
+        });
     },
   },
 };

@@ -50,7 +50,7 @@ router.beforeEach((to, _from, next) => {
     } else if (!isSignedIn) {
       next();
     } else {
-      router.push({ name: 'Main' });
+      router.push({ name: 'Home' });
     }
   } else {
     next();

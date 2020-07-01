@@ -19,13 +19,16 @@
     color: black;
     position: relative;
     align-items: center;
+    margin-bottom: 50px;
   }
   .nav{
     margin: auto;
-    height: 430px;
+    height: 410px;
     background: white;
     position: absolute;
     padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px 5px #90b1ff94;
     .password{
       margin: 10px 0;
     }
@@ -59,5 +62,11 @@ hr{
   }
   p:hover{
     background: rgba(92, 173, 163, 0.39);
+  }
+}
+.el-form-item{
+  .btn-signup{
+    width: 100%;
+    border-radius: 20px;
   }
 }

@@ -5,9 +5,9 @@
         <h2>TODO LIST</h2>
       </el-col>
       <el-col :span="12">
-        <el-dropdown>
+        <el-dropdown trigger="click">
           <span class="el-dropdown-link">
-            {{ email }}<i class="el-icon-arrow-down el-icon--right"></i>
+            {{email}}<i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>

@@ -9,6 +9,8 @@ function userData() {
   return JSON.parse(localStorage.getItem('user'));
 }
 function updateUserData(data) {
+  console.log(data);
+
   localStorage.setItem('user', JSON.stringify(data));
 }
 function signOut() {
