@@ -115,17 +115,8 @@ export default {
 
     updateTitle(id) {
       this.loading = true;
-      axios({
-        method: 'put',
-        url: `https://mockup-api.herokuapp.com/api/v1/todos/${id}`,
-        headers: {
-          Authorization: userServices.userData().auth_token,
-          'Content-Type': 'application/json',
-        },
-        data: {
-          title: this.form.title,
-        },
-      }).then(() => {
+      todosServices.updateTodo(id, { title: this.form.title }).then(() => {
+        this.getListItems();
         this.handleClose();
         this.$message({
           title: 'Thông báo',
@@ -156,20 +147,12 @@ export default {
     },
 
     handleSaveItem(item) {
-      // this.loading = true;
-      // edit
+      console.log(`a + ${item}`);
+
       if (item.id) {
-        axios({
-          method: 'put',
-          url: `https://mockup-api.herokuapp.com/api/v1/todos/${this.data.id}/items/${item.id}`,
-          headers: {
-            Authorization: userServices.userData().auth_token,
-            'Content-Type': 'application/json',
-          },
-          data: {
-            content: item.content,
-          },
-        }).then(() => {
+        this.loading = true;
+        todosServices.updateItem(this.data.id, item.id,
+          { content: this.selectedItem.content }).then(() => {
           this.loading = false;
           this.listItems = this.listItems.map((i) => ({
             ...i,
@@ -183,6 +166,20 @@ export default {
           });
         });
       } else {
+        // todosServices.createItem({ content: this.selectedItem.content }).then((response) => {
+        //   this.loading = false;
+        //   this.listItems = this.listItems.map((i) => ({
+        //     ...i,
+        //     id: i.id ? i.id : response.id,
+        //     isCreating: false,
+        //   }));
+        //   this.getListItems();
+        //   this.$message({
+        //     title: 'Thông báo',
+        //     type: 'success',
+        //     message: 'Thêm mới thành công.',
+        //   });
+        // });
         axios({
           method: 'post',
           url: `https://mockup-api.herokuapp.com/api/v1/todos/${this.data.id}/items`,
@@ -224,16 +221,9 @@ export default {
     },
 
     handleDeleteItems(item) {
-      axios({
-        method: 'delete',
-        url: `https://mockup-api.herokuapp.com/api/v1/todos/${this.data.id}/items/${item.id}`,
-        headers: {
-          Authorization: userServices.userData().auth_token,
-          'Content-Type': 'application/json',
-        },
-      }).then(() => {
+      todosServices.deleteItem(item).then(() => {
         this.getListItems();
-        this.$notify.success({
+        this.$message({
           title: 'Thông báo',
           type: 'success',
           message: 'Xóa thành công.',

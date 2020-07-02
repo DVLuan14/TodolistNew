@@ -66,8 +66,6 @@ export default {
     },
 
     checkedItems(item) {
-      // console.log(e.target.checked);
-
       this.loading = true;
       axios({
         method: 'put',
@@ -81,6 +79,11 @@ export default {
         },
       }).then(() => {
         this.loading = false;
+      });
+      this.$message({
+        title: 'Thông báo',
+        type: 'success',
+        message: 'Cập nhật thành công.',
       });
     },
 

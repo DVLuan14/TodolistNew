@@ -11,45 +11,72 @@ function getAll(params) {
   });
 }
 
+function createTodo(params) {
+  return axios({
+    method: 'POST',
+    url: ENDPOINT.TODOS,
+    headers: headers(),
+    params,
+  });
+}
+
+function updateTodo(id, data) {
+  return axios({
+    method: 'PUT',
+    url: `${ENDPOINT.TODOS}/${id}`,
+    headers: headers(),
+    data,
+  });
+}
+
+function deleteTodos(id) {
+  return axios({
+    method: 'DELETE',
+    url: `${ENDPOINT.TODOS}/${id}`,
+    headers: headers(),
+  });
+}
+
 function getItemsTodos(todoId) {
   return axios({
-    method: 'GET',
+    methods: 'GET',
     url: `${ENDPOINT.TODOS}/${todoId}/items`,
     headers: headers(),
   });
 }
 
-function createTodos(params) {
+function createItem(todoId, data) {
   return axios({
-    methods: 'POST',
-    url: ENDPOINT.TODOS,
+    method: 'POST',
+    url: `${ENDPOINT.TODOS}/${todoId}/items`,
     headers: headers(),
-    params,
+    data,
   });
 }
 
-function editTodos(params) {
+function updateItem(todoId, id, data) {
   return axios({
-    methods: 'PUT',
-    url: ENDPOINT.TODOS,
+    method: 'PUT',
+    url: `${ENDPOINT.TODOS}/${todoId}/items/${id}`,
     headers: headers(),
-    params,
+    data,
   });
 }
 
-function deleteTodos(params) {
+function deleteItem(todoId, id) {
   return axios({
-    methods: 'DELETE',
-    url: ENDPOINT.TODOS,
+    method: 'DELETE',
+    url: `${ENDPOINT.TODOS}/${todoId}/items/${id}`,
     headers: headers(),
-    params,
   });
 }
-
 export default {
   getAll,
-  getItemsTodos,
-  createTodos,
-  editTodos,
+  createTodo,
+  updateTodo,
   deleteTodos,
+  getItemsTodos,
+  createItem,
+  updateItem,
+  deleteItem,
 };

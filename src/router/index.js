@@ -39,7 +39,7 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, _from, next) => {
-  const isSignedIn = userServices.isSignedIn();
+  const isSignedIn = userServices.hasLogin();
   if (to.meta && to.meta.auth !== undefined) {
     if (to.meta.auth) {
       if (!isSignedIn) {

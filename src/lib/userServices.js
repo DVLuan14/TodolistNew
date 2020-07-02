@@ -1,4 +1,4 @@
-function isSignedIn() {
+function hasLogin() {
   const user = JSON.parse(localStorage.getItem('user'));
   if (user) {
     return true;
@@ -9,15 +9,13 @@ function userData() {
   return JSON.parse(localStorage.getItem('user'));
 }
 function updateUserData(data) {
-  console.log(data);
-
   localStorage.setItem('user', JSON.stringify(data));
 }
 function signOut() {
   localStorage.removeItem('user');
 }
 export default {
-  isSignedIn,
+  hasLogin,
   userData,
   updateUserData,
   signOut,

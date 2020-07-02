@@ -175,22 +175,12 @@ export default {
     },
 
     handleSaveCreate() {
-      this.$refs.form.validate((valid) => {
-        if (valid) {
-          console.log('valid', valid);
-        }
-        axios({
-          method: 'post',
-          url: 'https://mockup-api.herokuapp.com/api/v1/todos',
-          headers: {
-            Authorization: userServices.userData().auth_token,
-            'Content-Type': 'application/json',
-          },
-          data: {
-            title: this.form.title,
-          },
-        }).then(() => {
-          this.getListTodo();
+      todosServices.createTodo({ title: this.form.title }).then(() => {
+        this.getListTodo();
+        this.$message({
+          title: 'Thông báo',
+          type: 'success',
+          message: 'Thêm mới thành công.',
         });
       });
     },
@@ -226,16 +216,14 @@ export default {
     },
 
     handleDelete(id) {
-      axios({
-        method: 'delete',
-        url: `https://mockup-api.herokuapp.com/api/v1/todos/${id}`,
-        headers: {
-          Authorization: userServices.userData().auth_token,
-          'Content-Type': 'application/json',
-        },
-      }).then(() => {
+      todosServices.deleteTodos(id).then(() => {
         this.visibleDeletePopup = false;
         this.getListTodo();
+        this.$message({
+          title: 'Thông báo',
+          type: 'success',
+          message: 'Xóa thành công.',
+        });
       });
     },
 
